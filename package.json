@@ -1,7 +1,8 @@
 {
-  "name": "bond",
+  "name": "bondjs",
   "version": "0.0.1",
   "description": "simple js stub/spy library",
+  "main": "bond.coffee",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha --compilers coffee:coffee-script test.coffee"
   },

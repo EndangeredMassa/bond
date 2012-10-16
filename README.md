@@ -25,6 +25,13 @@ bond spies
 
 `spy.calledArgs` is an array of methods calls, each index holds the array of arguments for that call
 
+usage
+===
+
+`npm install bondjs` -> `bond = require 'bondjs'`
+
+`<script src="bond.js">` -> `window.bond(...)`
+
 tests
 ===
 
