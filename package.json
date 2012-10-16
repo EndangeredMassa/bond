@@ -1,10 +1,11 @@
 {
   "name": "bondjs",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "simple js stub/spy library",
   "main": "bond.coffee",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha --compilers coffee:coffee-script test.coffee"
+    "test": "./node_modules/mocha/bin/mocha --compilers coffee:coffee-script test.coffee",
+    "prepublish": "./node_modules/coffee-script/bin/coffee -c bond.coffee"
   },
   "author": "Sean Massa <endangeredmassa@gmail.com>",
   "dependencies": {
