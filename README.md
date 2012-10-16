@@ -20,7 +20,9 @@ bond spies
 ====
 
 `spy.called` is a call count for the spy
+
 `spy.calledWith(arg1, arg2, ...)` is a test for being called with specific values
+
 `spy.calledArgs` is an array of methods calls, each index holds the array of arguments for that call
 
 tests
