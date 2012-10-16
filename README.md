@@ -1,10 +1,13 @@
-== bond: the simple stub/spy javascript library ==
+bond: the simple stub/spy javascript library
+===
 
 bond only provides stubbing and spy functionality. For test running and assertions, you will need to use other libraries.
 
 the api is simple:
 
-=== bond api ===
+bond api
+====
+
 `bond(object, 'propertyOrMethodName')` returns the bond api
 
 `bond#to(value)` replaces the value with a new value
@@ -13,13 +16,15 @@ the api is simple:
 
 `bond#through()` replaces the value with a spy, but allows it to return its normal value
 
-=== bond spies ===
+bond spies
+====
 
 `spy.called` is a call count for the spy
 `spy.calledWith(arg1, arg2, ...)` is a test for being called with specific values
 `spy.calledArgs` is an array of methods calls, each index holds the array of arguments for that call
 
-== tests ==
+tests
+===
 
 see the `test.coffee` file for examples
 
