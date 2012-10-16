@@ -1,22 +1,8 @@
-createSpy = (value) ->
+createSpy = (getValue) ->
   spy = (args...) ->
     spy.calledArgs[spy.called] = args
     spy.called++
-    value
-
-  spy.called = 0
-  spy.calledArgs = []
-  spy.calledWith = (args...) ->
-    return false if !spy.called
-    lastArgs = spy.calledArgs[spy.called-1]
-    arrayEqual(args, lastArgs)
-  spy
-
-createThroughSpy = (context, method) ->
-  spy = (args...) ->
-    spy.calledArgs[spy.called] = args
-    spy.called++
-    method.apply(context, args)
+    getValue(args)
 
   spy.called = 0
   spy.calledArgs = []
@@ -43,12 +29,13 @@ bond = (obj, property) ->
 
   returnMethod = (returnValue) ->
     afterEach -> obj[property] = previous
-    obj[property] = createSpy(returnValue)
+    obj[property] = createSpy -> returnValue
     obj[property]
 
   through = ->
     afterEach -> obj[property] = previous
-    obj[property] = createThroughSpy(obj, previous)
+    obj[property] = createSpy (args) ->
+      previous.apply(obj, args)
     obj[property]
 
   {
