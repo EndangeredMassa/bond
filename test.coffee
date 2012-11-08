@@ -1,4 +1,4 @@
-{ok:expect} = require 'assert'
+{ok:expect, equal} = require 'assert'
 bond = require './bond.coffee'
 
 describe 'bond', ->
@@ -6,43 +6,56 @@ describe 'bond', ->
     add: (a, b) ->
       a + b
 
+    ComplexNumber: (@real, @imaginary) ->
+      this.toString = ->
+        "#{@real} + #{@imaginary}i"
+
   describe 'to', ->
     it 'replaces values', ->
       bond(math, 'add').to(-> 999)
 
       result = math.add(1, 2)
-      expect result == 999
+      equal result, 999
 
     it 'returns to original value', ->
       result = math.add(1, 2)
-      expect result == 3
+      equal result, 3
 
   describe 'return', ->
     it 'replaces methods', ->
       bond(math, 'add').return(888)
 
       result = math.add()
-      expect result == 888
+      equal result, 888
 
     it 'returns to original value', ->
       result = math.add(1, 2)
-      expect result == 3
+      equal result, 3
 
   describe 'through', ->
     it 'calls original method', ->
       bond(math, 'add').through()
 
       result = math.add(1, 2)
-      expect result == 3
+      equal result, 3
 
   describe 'spies with `through` and `return`', ->
+    it 'reports missing properties', ->
+      errorMessage = null
+      try
+        bond(math, 'non-existant').through()
+      catch e
+        errorMessage = e.message
+
+      equal errorMessage, 'Could not find property non-existant.'
+
     it 'records call count via called', ->
       bond(math, 'add').return(777)
-      expect math.add.called == 0
+      equal math.add.called, 0
       math.add(1, 2)
-      expect math.add.called == 1
+      equal math.add.called, 1
       math.add(1, 2)
-      expect math.add.called == 2
+      equal math.add.called, 2
 
     it 'records called via called', ->
       bond(math, 'add').through()
@@ -62,13 +75,30 @@ describe 'bond', ->
       math.add(111, 222)
       math.add(333, 444)
 
-      expect math.add.calledArgs[0][0] == 111
-      expect math.add.calledArgs[0][1] == 222
-      expect math.add.calledArgs[1][0] == 333
-      expect math.add.calledArgs[1][1] == 444
+      equal math.add.calledArgs[0][0], 111
+      equal math.add.calledArgs[0][1], 222
+      equal math.add.calledArgs[1][0], 333
+      equal math.add.calledArgs[1][1], 444
 
     it 'returns the spy', ->
       spy = bond(math, 'add').through()
       math.add(1, 2)
       expect spy.called
+
+    it 'through is constructor safe', ->
+      bond(math, 'ComplexNumber').through()
+      result = new math.ComplexNumber(3, 4)
+
+      equal result.real, 3
+      equal result.imaginary, 4
+      expect math.ComplexNumber.called
+
+    it 'return is constructor safe', ->
+      number =
+        real: 1
+        imaginary: 2
+      bond(math, 'ComplexNumber').return(number)
+      result = new math.ComplexNumber(3, 4)
+
+      equal result, number
 

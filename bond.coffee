@@ -1,9 +1,31 @@
-createSpy = (getValue) ->
-  spy = (args...) ->
+createThroughSpy = (getValue) ->
+  spy = ->
+    args = Array::slice.call(arguments)
     spy.calledArgs[spy.called] = args
     spy.called++
-    getValue(args)
 
+    isConstructor = Object.keys(this).length == 0
+
+    result = getValue.apply(this, args)
+
+    # not sure why return value matters with `new` call
+    return this if isConstructor
+    result
+
+  enhanceSpy(spy, getValue)
+
+createReturnSpy = (getValue) ->
+  spy = ->
+    args = Array::slice.call(arguments)
+    spy.calledArgs[spy.called] = args
+    spy.called++
+
+    getValue.apply(this, args)
+
+  enhanceSpy(spy, getValue)
+
+enhanceSpy = (spy, original) ->
+  spy.prototype = original.prototype
   spy.called = 0
   spy.calledArgs = []
   spy.calledWith = (args...) ->
@@ -22,20 +44,37 @@ arrayEqual = (A, B) ->
 bond = (obj, property) ->
   previous = obj[property]
 
+  if !previous?
+    throw new Error("Could not find property #{property}.")
+
   to = (newValue) ->
-    afterEach -> obj[property] = previous
+    unregistered = false
+    afterEach ->
+      return if unregistered
+      obj[property] = previous
+      unregistered = true
+
     obj[property] = newValue
     obj[property]
 
   returnMethod = (returnValue) ->
-    afterEach -> obj[property] = previous
-    obj[property] = createSpy -> returnValue
+    unregistered = false
+    afterEach ->
+      return if unregistered
+      obj[property] = previous
+      unregistered = true
+
+    obj[property] = createReturnSpy -> returnValue
     obj[property]
 
   through = ->
-    afterEach -> obj[property] = previous
-    obj[property] = createSpy (args) ->
-      previous.apply(obj, args)
+    unregistered = false
+    afterEach ->
+      return if unregistered
+      obj[property] = previous
+      unregistered = true
+
+    obj[property] = createThroughSpy(previous)
     obj[property]
 
   {
