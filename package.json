@@ -2,7 +2,7 @@
   "name": "bondjs",
   "version": "0.0.6",
   "description": "simple js stub/spy library",
-  "main": "bond.coffee",
+  "main": "bond.js",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha --compilers coffee:coffee-script test.coffee",
     "prepublish": "./node_modules/coffee-script/bin/coffee -c bond.coffee"
