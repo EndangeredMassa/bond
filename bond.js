@@ -62,6 +62,9 @@
 
   bond = function(obj, property) {
     var previous, returnMethod, through, to;
+    if (arguments.length === 0) {
+      return createReturnSpy(function() {});
+    }
     previous = obj[property];
     if (!(previous != null)) {
       throw new Error("Could not find property " + property + ".");
