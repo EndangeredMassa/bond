@@ -10,6 +10,20 @@ describe 'bond', ->
       this.toString = ->
         "#{@real} + #{@imaginary}i"
 
+  describe '#bond', ->
+    it 'returns a spy when called with 0 args', ->
+      spy = bond()
+      expect !spy.called
+
+      spy()
+      expect spy.called
+
+    it 'returns the bond api when called with 2 args', ->
+      api = bond(math, 'add')
+      expect api.to
+      expect api.return
+      expect api.through
+
   describe 'to', ->
     it 'replaces values', ->
       bond(math, 'add').to(-> 999)

@@ -42,6 +42,8 @@ arrayEqual = (A, B) ->
   true
 
 bond = (obj, property) ->
+  return createReturnSpy(->) if arguments.length == 0
+
   previous = obj[property]
 
   if !previous?
