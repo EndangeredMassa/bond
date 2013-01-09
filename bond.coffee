@@ -46,7 +46,10 @@ allStubs = []
 registerHooks = ->
   return if registeredHooks
 
-  afterEach ->
+  after = afterEach ? testDone ? this.cleanup ? ->
+    throw new Error('bond.cleanup must be specified if your test runner does not use afterEach or testDone')
+
+  after ->
     for stubRestore in allStubs
       stubRestore()
     allStubs = []
@@ -59,9 +62,6 @@ bond = (obj, property) ->
 
   if !previous?
     throw new Error("Could not find property #{property}.")
-
-  after = afterEach ? testDone ? this.cleanup ? ->
-    throw new Error('bond.cleanup must be specified if your test runner does not use afterEach or testDone')
 
   registerRestore = ->
     allStubs.push restore
