@@ -1,4 +1,4 @@
-createThroughSpy = (getValue) ->
+createThroughSpy = (getValue, bondApi) ->
   spy = ->
     args = Array::slice.call(arguments)
     spy.calledArgs[spy.called] = args
@@ -12,9 +12,9 @@ createThroughSpy = (getValue) ->
     return this if isConstructor
     result
 
-  enhanceSpy(spy, getValue)
+  enhanceSpy(spy, getValue, bondApi)
 
-createReturnSpy = (getValue) ->
+createReturnSpy = (getValue, bondApi) ->
   spy = ->
     args = Array::slice.call(arguments)
     spy.calledArgs[spy.called] = args
@@ -22,9 +22,9 @@ createReturnSpy = (getValue) ->
 
     getValue.apply(this, args)
 
-  enhanceSpy(spy, getValue)
+  enhanceSpy(spy, getValue, bondApi)
 
-enhanceSpy = (spy, original) ->
+enhanceSpy = (spy, original, bondApi) ->
   spy.prototype = original.prototype
   spy.called = 0
   spy.calledArgs = []
@@ -32,6 +32,7 @@ enhanceSpy = (spy, original) ->
     return false if !spy.called
     lastArgs = spy.calledArgs[spy.called-1]
     arrayEqual(args, lastArgs)
+  spy[k] = v for k, v of bondApi
   spy
 
 arrayEqual = (A, B) ->
@@ -49,40 +50,33 @@ bond = (obj, property) ->
   if !previous?
     throw new Error("Could not find property #{property}.")
 
-  to = (newValue) ->
-    unregistered = false
-    afterEach ->
-      return if unregistered
-      obj[property] = previous
-      unregistered = true
+  unregistered = false
+  restore = ->
+    return if unregistered
+    obj[property] = previous
+    unregistered = true
 
+  to = (newValue) ->
+    afterEach(restore)
     obj[property] = newValue
     obj[property]
 
   returnMethod = (returnValue) ->
-    unregistered = false
-    afterEach ->
-      return if unregistered
-      obj[property] = previous
-      unregistered = true
-
-    obj[property] = createReturnSpy -> returnValue
+    afterEach(restore)
+    returnValueFn = -> returnValue
+    obj[property] = createReturnSpy(returnValueFn, this)
     obj[property]
 
   through = ->
-    unregistered = false
-    afterEach ->
-      return if unregistered
-      obj[property] = previous
-      unregistered = true
-
-    obj[property] = createThroughSpy(previous)
+    afterEach(restore)
+    obj[property] = createThroughSpy(previous, this)
     obj[property]
 
   {
-    to: to
-    return: returnMethod
-    through: through
+    to:       to
+    return:   returnMethod
+    through:  through
+    restore:  restore
   }
 
 window?.bond = bond
