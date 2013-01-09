@@ -66,7 +66,7 @@
   };
 
   bond = function(obj, property) {
-    var previous, restore, returnMethod, through, to, unregistered;
+    var after, previous, restore, returnMethod, through, to, unregistered, _ref, _ref1;
     if (arguments.length === 0) {
       return createReturnSpy(function() {});
     }
@@ -74,6 +74,9 @@
     if (!(previous != null)) {
       throw new Error("Could not find property " + property + ".");
     }
+    after = (_ref = (_ref1 = typeof afterEach !== "undefined" && afterEach !== null ? afterEach : testDone) != null ? _ref1 : this.cleanup) != null ? _ref : function() {
+      throw new Error("bond.cleanup must be specified if your test runner does not use afterEach or testDone");
+    };
     unregistered = false;
     restore = function() {
       if (unregistered) {
@@ -83,13 +86,13 @@
       return unregistered = true;
     };
     to = function(newValue) {
-      afterEach(restore);
+      after(restore);
       obj[property] = newValue;
       return obj[property];
     };
     returnMethod = function(returnValue) {
       var returnValueFn;
-      afterEach(restore);
+      after(restore);
       returnValueFn = function() {
         return returnValue;
       };
@@ -97,7 +100,7 @@
       return obj[property];
     };
     through = function() {
-      afterEach(restore);
+      after(restore);
       obj[property] = createThroughSpy(previous, this);
       return obj[property];
     };

@@ -50,6 +50,9 @@ bond = (obj, property) ->
   if !previous?
     throw new Error("Could not find property #{property}.")
 
+  after = afterEach ? testDone ? this.cleanup ? ->
+    throw new Error("bond.cleanup must be specified if your test runner does not use afterEach or testDone")
+
   unregistered = false
   restore = ->
     return if unregistered
@@ -57,18 +60,18 @@ bond = (obj, property) ->
     unregistered = true
 
   to = (newValue) ->
-    afterEach(restore)
+    after(restore)
     obj[property] = newValue
     obj[property]
 
   returnMethod = (returnValue) ->
-    afterEach(restore)
+    after(restore)
     returnValueFn = -> returnValue
     obj[property] = createReturnSpy(returnValueFn, this)
     obj[property]
 
   through = ->
-    afterEach(restore)
+    after(restore)
     obj[property] = createThroughSpy(previous, this)
     obj[property]
 
