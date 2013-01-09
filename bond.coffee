@@ -8,7 +8,6 @@ createThroughSpy = (getValue, bondApi) ->
 
     result = getValue.apply(this, args)
 
-    # not sure why return value matters with `new` call
     return this if isConstructor
     result
 
@@ -42,36 +41,45 @@ arrayEqual = (A, B) ->
 
   true
 
+registeredHooks = false
+allStubs = []
+registerHooks = ->
+  return if registeredHooks
+
+  afterEach ->
+    for stubRestore in allStubs
+      stubRestore()
+    allStubs = []
+
 bond = (obj, property) ->
   return createReturnSpy(->) if arguments.length == 0
 
+  registerHooks()
   previous = obj[property]
 
   if !previous?
     throw new Error("Could not find property #{property}.")
 
   after = afterEach ? testDone ? this.cleanup ? ->
-    throw new Error("bond.cleanup must be specified if your test runner does not use afterEach or testDone")
+    throw new Error('bond.cleanup must be specified if your test runner does not use afterEach or testDone')
 
-  unregistered = false
+  registerRestore = ->
+    allStubs.push restore
   restore = ->
-    return if unregistered
     obj[property] = previous
-    unregistered = true
 
   to = (newValue) ->
-    after(restore)
+    registerRestore()
     obj[property] = newValue
     obj[property]
 
   returnMethod = (returnValue) ->
-    after(restore)
+    registerRestore()
     returnValueFn = -> returnValue
     obj[property] = createReturnSpy(returnValueFn, this)
     obj[property]
 
   through = ->
-    after(restore)
     obj[property] = createThroughSpy(previous, this)
     obj[property]
 
@@ -82,7 +90,7 @@ bond = (obj, property) ->
     restore:  restore
   }
 
-bond.version = "0.0.8"
+bond.version = '0.0.8'
 
 window?.bond = bond
 module?.exports = bond
