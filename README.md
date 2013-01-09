@@ -39,3 +39,8 @@ see the `test.coffee` file for examples
 
 use `npm test` to run the tests
 
+
+license
+===
+
+MIT
