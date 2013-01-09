@@ -82,5 +82,7 @@ bond = (obj, property) ->
     restore:  restore
   }
 
+bond.version = "0.0.8"
+
 window?.bond = bond
 module?.exports = bond

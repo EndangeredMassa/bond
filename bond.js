@@ -112,6 +112,8 @@
     };
   };
 
+  bond.version = "0.0.8";
+
   if (typeof window !== "undefined" && window !== null) {
     window.bond = bond;
   }
