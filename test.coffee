@@ -23,6 +23,7 @@ describe 'bond', ->
       expect api.to
       expect api.return
       expect api.through
+      expect api.restore
 
   describe 'to', ->
     it 'replaces values', ->
@@ -53,7 +54,40 @@ describe 'bond', ->
       result = math.add(1, 2)
       equal result, 3
 
+  describe 'restore', ->
+    it 'restores the original property', ->
+      original = math.add
+      bond(math,'add').through()
+      expect original != math.add
+      math.add.restore()
+      expect original == math.add
+
   describe 'spies with `through` and `return`', ->
+    it 'returns the bond api mixed into the returned spy', ->
+      for method in ['through', 'return']
+        bond(math, 'add')[method]()
+        expect math.add.to
+        expect math.add.return
+        expect math.add.through
+        expect math.add.restore
+
+    it 'allows the spy to be replaced with new spies via the mixed-in api', ->
+      bond(math,'add').return(123)
+      result = math.add(1, 2)
+      equal result, 123
+
+      math.add.return(321)
+      result = math.add(1, 2)
+      equal result, 321
+
+      math.add.through()
+      result = math.add(1, 2)
+      equal result, 3
+
+      math.add.return(123)
+      result = math.add(1, 2)
+      equal result, 123
+
     it 'reports missing properties', ->
       errorMessage = null
       try
