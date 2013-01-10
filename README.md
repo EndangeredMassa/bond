@@ -3,8 +3,6 @@ bond: the simple stub/spy javascript library
 
 bond only provides stubbing and spy functionality. For test running and assertions, you will need to use other libraries.
 
-the api is simple:
-
 bond api
 ====
 
