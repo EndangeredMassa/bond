@@ -56,6 +56,7 @@ registerHooks = ->
 
 bond = (obj, property) ->
   return createReturnSpy(->) if arguments.length == 0
+  return createReturnSpy(-> obj) if arguments.length == 1
 
   registerHooks()
   previous = obj[property]

@@ -18,6 +18,14 @@ describe 'bond', ->
       spy()
       expect spy.called
 
+    it 'returns a return spy with a return when called with 1 arg', ->
+      spy = bond('foo')
+      expect !spy.called
+
+      result = spy()
+      expect spy.called
+      expect 'foo' == result
+
     it 'returns the bond api when called with 2 args', ->
       api = bond(math, 'add')
       expect api.to
