@@ -11,12 +11,18 @@ describe 'bond', ->
         "#{@real} + #{@imaginary}i"
 
   describe '#bond', ->
-    it 'returns a spy when called with 0 args', ->
-      spy = bond()
-      expect !spy.called
+    describe 'when called with 0 args', ->
+      it 'returns a simple spy', ->
+        spy = bond()
+        expect !spy.called
 
-      spy()
-      expect spy.called
+        spy()
+        expect spy.called
+
+      it 'returns a spy that can have a return value', ->
+        spy = bond().return(3)
+        result = spy()
+        equal result, 3
 
     it 'returns the bond api when called with 2 args', ->
       api = bond(math, 'add')
