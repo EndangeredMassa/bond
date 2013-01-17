@@ -23,15 +23,34 @@ createReturnSpy = (getValue, bondApi) ->
 
   enhanceSpy(spy, getValue, bondApi)
 
+createAnonymousSpy = ->
+  returnValue = null
+
+  spy = ->
+    args = Array::slice.call(arguments)
+    spy.calledArgs[spy.called] = args
+    spy.called++
+
+    returnValue
+
+  enhanceSpy(spy)
+
+  spy.return = (newReturnValue) ->
+    returnValue = newReturnValue
+    spy
+  spy
+
 enhanceSpy = (spy, original, bondApi) ->
-  spy.prototype = original.prototype
+  spy.prototype = original?.prototype
   spy.called = 0
   spy.calledArgs = []
   spy.calledWith = (args...) ->
     return false if !spy.called
     lastArgs = spy.calledArgs[spy.called-1]
     arrayEqual(args, lastArgs)
-  spy[k] = v for k, v of bondApi
+
+  spy[k] = v for k, v of bondApi if bondApi
+
   spy
 
 arrayEqual = (A, B) ->
@@ -55,7 +74,7 @@ registerHooks = ->
     allStubs = []
 
 bond = (obj, property) ->
-  return createReturnSpy(->) if arguments.length == 0
+  return createAnonymousSpy() if arguments.length == 0
 
   registerHooks()
   previous = obj[property]
@@ -90,7 +109,7 @@ bond = (obj, property) ->
     restore:  restore
   }
 
-bond.version = '0.0.8'
+bond.version = '0.0.9'
 
 window?.bond = bond
 module?.exports = bond
