@@ -8,6 +8,10 @@ bond api
 
 `bond(object, 'propertyOrMethodName')` returns the bond api
 
+`bond()` returns an anonymous spy
+
+`bond().return(value)` returns an anonymous spy that returns the given value when called
+
 `bond#to(value)` replaces the value with a new value; reverts the stub after the current test completes
 
 `bond#return(value)` replaces the value with a spy that returns the given value; reverts the spy after the current test completes
