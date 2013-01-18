@@ -4,10 +4,9 @@ createThroughSpy = (getValue, bondApi) ->
     spy.calledArgs[spy.called] = args
     spy.called++
 
-    isConstructor = Object.keys(this).length == 0
-
     result = getValue.apply(this, args)
 
+    isConstructor = (this instanceof arguments.callee)
     return this if isConstructor
     result
 
@@ -64,6 +63,7 @@ registeredHooks = false
 allStubs = []
 registerHooks = ->
   return if registeredHooks
+  registeredHooks = true
 
   after = afterEach ? testDone ? this.cleanup ? ->
     throw new Error('bond.cleanup must be specified if your test runner does not use afterEach or testDone')
@@ -109,7 +109,7 @@ bond = (obj, property) ->
     restore:  restore
   }
 
-bond.version = '0.0.9'
+bond.version = '0.0.10'
 
 window?.bond = bond
 module?.exports = bond

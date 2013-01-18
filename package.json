@@ -1,6 +1,6 @@
 {
   "name": "bondjs",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "simple js stub/spy library",
   "main": "bond.js",
   "scripts": {

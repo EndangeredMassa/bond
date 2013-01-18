@@ -6,6 +6,9 @@ describe 'bond', ->
     add: (a, b) ->
       a + b
 
+    subtract: (a, b) ->
+      a - b
+
     ComplexNumber: (@real, @imaginary) ->
       this.toString = ->
         "#{@real} + #{@imaginary}i"

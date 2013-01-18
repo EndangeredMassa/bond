@@ -10,8 +10,8 @@
       args = Array.prototype.slice.call(arguments);
       spy.calledArgs[spy.called] = args;
       spy.called++;
-      isConstructor = Object.keys(this).length === 0;
       result = getValue.apply(this, args);
+      isConstructor = this instanceof arguments.callee;
       if (isConstructor) {
         return this;
       }
@@ -94,6 +94,7 @@
     if (registeredHooks) {
       return;
     }
+    registeredHooks = true;
     after = (_ref = (_ref1 = typeof afterEach !== "undefined" && afterEach !== null ? afterEach : testDone) != null ? _ref1 : this.cleanup) != null ? _ref : function() {
       throw new Error('bond.cleanup must be specified if your test runner does not use afterEach or testDone');
     };
@@ -149,7 +150,7 @@
     };
   };
 
-  bond.version = '0.0.9';
+  bond.version = '0.0.10';
 
   if (typeof window !== "undefined" && window !== null) {
     window.bond = bond;
