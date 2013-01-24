@@ -59,12 +59,8 @@ arrayEqual = (A, B) ->
 
   true
 
-registeredHooks = false
 allStubs = []
-registerHooks = ->
-  return if registeredHooks
-  registeredHooks = true
-
+registerCleanupHook = ->
   after = afterEach ? testDone ? this.cleanup ? ->
     throw new Error('bond.cleanup must be specified if your test runner does not use afterEach or testDone')
 
@@ -73,10 +69,11 @@ registerHooks = ->
       stubRestore()
     allStubs = []
 
+registerCleanupHook()
+
 bond = (obj, property) ->
   return createAnonymousSpy() if arguments.length == 0
 
-  registerHooks()
   previous = obj[property]
 
   if !previous?
@@ -103,13 +100,13 @@ bond = (obj, property) ->
     obj[property]
 
   {
-    to:       to
-    return:   returnMethod
-    through:  through
-    restore:  restore
+    'to':       to
+    'return':   returnMethod
+    'through':  through
+    'restore':  restore
   }
 
-bond.version = '0.0.10'
+bond.version = '0.0.11'
 
 window?.bond = bond
 module?.exports = bond
