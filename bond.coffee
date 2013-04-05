@@ -95,15 +95,25 @@ bond = (obj, property) ->
     obj[property] = createReturnSpy(returnValueFn, this)
     obj[property]
 
+  asyncReturn = (returnValues...) ->
+    to (args..., callback) ->
+      if typeof callback != 'function'
+        throw new Error('asyncReturn expects last argument to be a function')
+
+      setTimeout ->
+        callback(null, returnValues...)
+      , 0
+
   through = ->
     obj[property] = createThroughSpy(previous, this)
     obj[property]
 
   {
-    'to':       to
-    'return':   returnMethod
-    'through':  through
-    'restore':  restore
+    'to': to
+    'return': returnMethod
+    'asyncReturn': asyncReturn
+    'through': through
+    'restore': restore
   }
 
 bond.version = '0.0.11'
