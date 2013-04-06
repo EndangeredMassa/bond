@@ -66,22 +66,21 @@ describe 'bond', ->
     it 'calls the last argument with the provided arguments', (done) ->
       ignoredValue1 = 5
       ignoredValue2 = 4
-      stubValue = 3
-      bond(module, 'useNodeCallback').asyncReturn(stubValue)
-      module.useNodeCallback ignoredValue1, ignoredValue2, (error, value) ->
-        expect !error
-        equal value, stubValue
-        done()
-
-    it 'calls the callback with all arguments', (done) ->
-      ignoredValue = 5
       stubValue1 = 3
       stubValue2 = 2
-      bond(module, 'useNodeCallback').asyncReturn(stubValue1, stubValue2)
-      module.useNodeCallback ignoredValue, (error, value1, value2) ->
+      bond(module, 'useNodeCallback').asyncReturn(null, stubValue1, stubValue2)
+      module.useNodeCallback ignoredValue1, ignoredValue2, (error, value1, value2) ->
         expect !error
         equal value1, stubValue1
         equal value2, stubValue2
+        done()
+
+    it 'calls the callback with an error', (done) ->
+      ignoredValue = 5
+      stubError = 1
+      bond(module, 'useNodeCallback').asyncReturn(stubError)
+      module.useNodeCallback ignoredValue, (error) ->
+        equal error, stubError
         done()
 
     it 'throws an error if the last argument is not a function', ->

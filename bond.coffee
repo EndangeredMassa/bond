@@ -101,7 +101,7 @@ bond = (obj, property) ->
         throw new Error('asyncReturn expects last argument to be a function')
 
       setTimeout ->
-        callback(null, returnValues...)
+        callback(returnValues...)
       , 0
 
   through = ->
