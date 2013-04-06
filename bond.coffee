@@ -59,6 +59,15 @@ arrayEqual = (A, B) ->
 
   true
 
+
+nextTick = do ->
+  return process.nextTick if typeof process?.nextTick == 'function'
+  return setImmediate if typeof setImmediate == 'function'
+
+  (fn) ->
+    setTimeout(fn, 0)
+
+
 allStubs = []
 registerCleanupHook = ->
   after = afterEach ? testDone ? this.cleanup ? ->
@@ -95,15 +104,24 @@ bond = (obj, property) ->
     obj[property] = createReturnSpy(returnValueFn, this)
     obj[property]
 
+  asyncReturn = (returnValues...) ->
+    to (args..., callback) ->
+      if typeof callback != 'function'
+        throw new Error('asyncReturn expects last argument to be a function')
+
+      nextTick ->
+        callback(returnValues...)
+
   through = ->
     obj[property] = createThroughSpy(previous, this)
     obj[property]
 
   {
-    'to':       to
-    'return':   returnMethod
-    'through':  through
-    'restore':  restore
+    'to': to
+    'return': returnMethod
+    'asyncReturn': asyncReturn
+    'through': through
+    'restore': restore
   }
 
 bond.version = '0.0.11'
