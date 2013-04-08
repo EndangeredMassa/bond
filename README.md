@@ -16,6 +16,8 @@ bond api
 
 `bond#return(value)` replaces the value with a spy that returns the given value; reverts the spy after the current test completes
 
+`bond#asyncReturn(values...)` replaces the value with a spy that calls the last argument passed to the function with the provided values
+
 `bond#through()` replaces the value with a spy, but allows it to return its normal value
 
 `bond#restore()` replaces a spy/stub with its original value; useful for implementing your own `cleanup` handler (see below)
