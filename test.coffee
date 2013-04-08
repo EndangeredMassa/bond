@@ -56,6 +56,61 @@ describe 'bond', ->
       result = math.add(1, 2)
       equal result, 3
 
+  describe 'asyncReturn', ->
+    module =
+      useNodeCallback: (value1, value2, callback) ->
+        throw new Error
+      dontUseNodeCallback: (value1, value2) ->
+        throw new Error
+
+    it 'calls the last argument with the provided arguments', (done) ->
+      ignoredValue1 = 5
+      ignoredValue2 = 4
+      stubValue1 = 3
+      stubValue2 = 2
+      bond(module, 'useNodeCallback').asyncReturn(null, stubValue1, stubValue2)
+      module.useNodeCallback ignoredValue1, ignoredValue2, (error, value1, value2) ->
+        expect !error
+        equal value1, stubValue1
+        equal value2, stubValue2
+        done()
+
+    it 'calls the callback with an error', (done) ->
+      ignoredValue = 5
+      stubError = 1
+      bond(module, 'useNodeCallback').asyncReturn(stubError)
+      module.useNodeCallback ignoredValue, (error) ->
+        equal error, stubError
+        done()
+
+    it 'throws an error if the last argument is not a function', ->
+      ignoredValue = 5
+      stubValue = 2
+      error = null
+      bond(module, 'dontUseNodeCallback').asyncReturn(stubValue)
+
+      try
+        module.useNodeCallback ignoredValue
+      catch err
+        error = err
+
+      expect error
+
+    it 'calls the callback on the next tick', (done) ->
+      ignoredValue = 5
+      stubValue = 3
+
+      module2 =
+        work: ->
+          done()
+      callbackSpy = bond(module2, 'work').through()
+
+      bond(module, 'useNodeCallback').asyncReturn(stubValue)
+      module.useNodeCallback ignoredValue, callbackSpy
+
+      # this will fail if the callback is called immediately
+      expect !callbackSpy.called
+
   describe 'through', ->
     it 'calls original method', ->
       bond(math, 'add').through()
