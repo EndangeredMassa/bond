@@ -1,3 +1,6 @@
+isFunction = (obj) ->
+  typeof obj == 'function'
+
 createThroughSpy = (getValue, bondApi) ->
   spy = ->
     args = Array::slice.call(arguments)
@@ -61,8 +64,8 @@ arrayEqual = (A, B) ->
 
 
 nextTick = do ->
-  return process.nextTick if typeof process?.nextTick == 'function'
-  return setImmediate if typeof setImmediate == 'function'
+  return process.nextTick if isFunction(process?.nextTick)
+  return setImmediate if isFunction(setImmediate)
 
   (fn) ->
     setTimeout(fn, 0)
@@ -95,6 +98,10 @@ bond = (obj, property) ->
 
   to = (newValue) ->
     registerRestore()
+
+    if isFunction(newValue)
+      newValue = createThroughSpy(newValue, this)
+
     obj[property] = newValue
     obj[property]
 
@@ -106,7 +113,7 @@ bond = (obj, property) ->
 
   asyncReturn = (returnValues...) ->
     to (args..., callback) ->
-      if typeof callback != 'function'
+      if !isFunction(callback)
         throw new Error('asyncReturn expects last argument to be a function')
 
       nextTick ->
