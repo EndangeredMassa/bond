@@ -3,6 +3,10 @@ bond = require './bond.coffee'
 
 describe 'bond', ->
   math =
+    PI: Math.PI
+
+    abs: Math.abs
+
     add: (a, b) ->
       a + b
 
@@ -35,15 +39,29 @@ describe 'bond', ->
       expect api.restore
 
   describe 'to', ->
-    it 'replaces values', ->
-      bond(math, 'add').to(-> 999)
+    describe 'non function values', ->
+      it 'replaces values', ->
+        bond(math, 'PI').to 3.14
 
-      result = math.add(1, 2)
-      equal result, 999
+        equal math.PI, 3.14
 
-    it 'returns to original value', ->
-      result = math.add(1, 2)
-      equal result, 3
+      it 'returns to original value', ->
+        equal math.PI, 3.141592653589793
+
+    describe 'function values', ->
+      it 'creates a through spy', ->
+        bond(math, 'subtract').to (x, y) -> math.abs(x - y)
+
+        result = math.subtract(5, 10)
+
+        equal result, 5
+        equal math.subtract.called, 1
+        expect math.subtract.calledWith(5, 10)
+
+      it 'returns the original values', ->
+        result = math.subtract(5, 10)
+        equal result, -5
+
 
   describe 'return', ->
     it 'replaces methods', ->
