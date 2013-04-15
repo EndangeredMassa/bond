@@ -160,7 +160,7 @@ void function () {
       restore: restore
     };
   };
-  bond.version = '0.0.11';
+  bond.version = '0.0.13';
   if ('undefined' !== typeof window && null != window)
     window.bond = bond;
   if ('undefined' !== typeof module && null != module ? module.exports : void 0)

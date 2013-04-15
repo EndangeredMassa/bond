@@ -129,7 +129,7 @@ bond = (obj, property) ->
     'restore': restore
   }
 
-bond.version = '0.0.11'
+bond.version = '0.0.13'
 
 window.bond = bond if window?
 module.exports = bond if module?.exports
