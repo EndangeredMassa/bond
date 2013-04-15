@@ -65,14 +65,14 @@ arrayEqual = (A, B) ->
 
 nextTick = do ->
   return process.nextTick if isFunction(process?.nextTick)
-  return setImmediate if isFunction(setImmediate)
+  return setImmediate if setImmediate? && isFunction(setImmediate)
 
   (fn) ->
     setTimeout(fn, 0)
 
 
 allStubs = []
-registerCleanupHook = ->
+do registerCleanupHook = ->
   after = afterEach ? testDone ? this.cleanup ? ->
     throw new Error('bond.cleanup must be specified if your test runner does not use afterEach or testDone')
 
@@ -80,8 +80,6 @@ registerCleanupHook = ->
     for stubRestore in allStubs
       stubRestore()
     allStubs = []
-
-registerCleanupHook()
 
 bond = (obj, property) ->
   return createAnonymousSpy() if arguments.length == 0
@@ -133,5 +131,5 @@ bond = (obj, property) ->
 
 bond.version = '0.0.11'
 
-window?.bond = bond
-module?.exports = bond
+window.bond = bond if window?
+module.exports = bond if module?.exports
