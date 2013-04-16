@@ -86,9 +86,6 @@ bond = (obj, property) ->
 
   previous = obj[property]
 
-  if !previous?
-    throw new Error("Could not find property #{property}.")
-
   registerRestore = ->
     allStubs.push restore
   restore = ->

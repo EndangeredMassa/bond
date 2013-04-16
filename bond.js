@@ -107,8 +107,6 @@ void function () {
     if (arguments.length === 0)
       return createAnonymousSpy();
     previous = obj[property];
-    if (!(null != previous))
-      throw new Error('Could not find property ' + property + '.');
     registerRestore = function () {
       return allStubs.push(restore);
     };
