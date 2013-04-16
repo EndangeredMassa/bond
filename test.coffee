@@ -170,15 +170,6 @@ describe 'bond', ->
       result = math.add(1, 2)
       equal result, 123
 
-    it 'reports missing properties', ->
-      errorMessage = null
-      try
-        bond(math, 'non-existant').through()
-      catch e
-        errorMessage = e.message
-
-      equal errorMessage, 'Could not find property non-existant.'
-
     it 'records call count via called', ->
       bond(math, 'add').return(777)
       equal math.add.called, 0
