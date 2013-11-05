@@ -10,4 +10,4 @@ compile:
 .PHONY: test
 
 test:
-	$(MOCHA) --compilers coffee:coffee-script-redux --reporter spec --colors test.coffee
+	$(MOCHA) --compilers coffee:coffee-script-redux/register --reporter spec --colors test.coffee
