@@ -2,7 +2,7 @@
   "name": "bondjs",
   "version": "0.0.14",
   "description": "simple js stub/spy library",
-  "main": "bond.js",
+  "main": "lib/bond.js",
   "author": "Sean Massa <endangeredmassa@gmail.com>",
   "devDependencies": {
     "mocha": "~1.6.0",
