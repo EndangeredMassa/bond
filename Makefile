@@ -5,7 +5,7 @@ COFFEE=$(BIN)/coffee
 
 all: compile test
 compile:
-	$(COFFEE) --js <./bond.coffee >./bond.js
+	$(COFFEE) --js <bond.coffee >lib/bond.js
 
 .PHONY: test
 
