@@ -1,5 +1,5 @@
 {ok:expect, equal} = require 'assert'
-bond = require './bond.coffee'
+bond = require './bond'
 
 describe 'bond', ->
   math =
