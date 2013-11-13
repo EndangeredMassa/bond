@@ -1,6 +1,6 @@
 {
   "name": "bondjs",
-  "version": "0.0.14",
+  "version": "1.0.0",
   "description": "simple js stub/spy library",
   "main": "lib/bond.js",
   "author": "Sean Massa <endangeredmassa@gmail.com>",
