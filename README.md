@@ -1,3 +1,6 @@
+[![David](https://david-dm.org/EndangeredMassa/bond.png)](https://david-dm.org/EndangeredMassa/bond)
+[![Dev dependencies](https://david-dm.org/EndangeredMassa/bond/dev-status.png)](https://david-dm.org/EndangeredMassa/bond/#info=devDependencies)
+
 bond: the simple stub/spy javascript library
 ===
 
