@@ -58,4 +58,4 @@ use `npm test` to run the tests
 license
 ===
 
-MIT
+[MIT](LICENSE)
