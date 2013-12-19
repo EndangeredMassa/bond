@@ -5,7 +5,8 @@
   "main": "lib/bond.js",
   "author": "Sean Massa <endangeredmassa@gmail.com>",
   "scripts": {
-    "test": "make test"
+    "compile": "./node_modules/.bin/coffee --js <bond.coffee >lib/bond.js",
+    "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script-redux/register --reporter spec --colors test.coffee"
   },
   "devDependencies": {
     "mocha": "~1.6.0",
