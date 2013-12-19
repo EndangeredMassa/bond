@@ -1,6 +1,8 @@
 bond: the simple stub/spy javascript library
 ===
 
+![build status](https://travis-ci.org/EndangeredMassa/bond.png)
+
 bond only provides stubbing and spy functionality. For test running and assertions, you will need to use other libraries.
 
 bond api
