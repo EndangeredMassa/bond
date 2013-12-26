@@ -1,5 +1,6 @@
 bond: the simple stub/spy javascript library
 ===
+[![David](https://david-dm.org/EndangeredMassa/bond.png)](https://david-dm.org/EndangeredMassa/bond)
 
 ![build status](https://travis-ci.org/EndangeredMassa/bond.png)
 
