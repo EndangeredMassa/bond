@@ -1,6 +1,6 @@
 {
   "name": "bondjs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "simple js stub/spy library",
   "repository": {
     "type": "git",
@@ -14,6 +14,6 @@
   },
   "devDependencies": {
     "mocha": "~1.6.0",
-    "coffee-script-redux" : "~2.0.0"
+    "coffee-script-redux": "~2.0.0"
   }
 }
