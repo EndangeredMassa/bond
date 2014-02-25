@@ -2,6 +2,10 @@
   "name": "bondjs",
   "version": "1.0.0",
   "description": "simple js stub/spy library",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/EndangeredMassa/bond"
+  },
   "main": "lib/bond.js",
   "author": "Sean Massa <endangeredmassa@gmail.com>",
   "scripts": {
