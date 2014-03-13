@@ -1,13 +1,20 @@
-bond: the simple stub/spy javascript library
-===
+# bond
+
+_the simple stub/spy javascript library_
+
 [![David](https://david-dm.org/EndangeredMassa/bond.png)](https://david-dm.org/EndangeredMassa/bond)
 
 ![build status](https://travis-ci.org/EndangeredMassa/bond.png)
 
-bond only provides stubbing and spy functionality. For test running and assertions, you will need to use other libraries.
+bond only provides stubbing and spy functionality.
+For test running and assertions,
+you will need to use other libraries.
 
-bond api
-====
+Keep up to date with changes
+by checking the
+[releases](https://github.com/endangeredmassa/bond/releases).
+
+## bond api
 
 `bond(object, 'propertyOrMethodName')` returns the bond api
 
@@ -25,8 +32,7 @@ bond api
 
 `bond#restore()` replaces a spy/stub with its original value; useful for implementing your own `cleanup` handler (see below)
 
-bond spies
-====
+### bond spies
 
 `spy.called` is a call count for the spy
 
@@ -34,8 +40,7 @@ bond spies
 
 `spy.calledArgs` is an array of methods calls, each index holds the array of arguments for that call
 
-usage
-===
+## usage
 
 `npm install bondjs` -> `bond = require 'bondjs'`
 
@@ -47,15 +52,13 @@ usage
 
 `bond.cleanup = someTestRunner.registerAfterCallback`
 
-tests
-===
+## tests
 
 see the `test.coffee` file for examples
 
 use `npm test` to run the tests
 
-
-license
-===
+## license
 
 [MIT](LICENSE)
+
