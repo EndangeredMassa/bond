@@ -10,7 +10,7 @@ createThroughSpy = (getValue, bondApi) ->
     result = getValue.apply(this, args)
 
     isConstructor = (this instanceof arguments.callee)
-    return this if isConstructor
+    return this if isConstructor and typeof result != 'object'
     result
 
   enhanceSpy(spy, getValue, bondApi)

@@ -17,6 +17,9 @@ describe 'bond', ->
       this.toString = ->
         "#{@real} + #{@imaginary}i"
 
+    NumberObject: (number) ->
+      return {number}
+
   describe '#bond', ->
     describe 'when called with 0 args', ->
       it 'returns a simple spy', ->
@@ -62,6 +65,19 @@ describe 'bond', ->
         result = math.subtract(5, 10)
         equal result, -5
 
+      it 'explicitly returns objects from constructors', ->
+        bond(math, 'NumberObject').to -> {number: 7}
+
+        result = new math.NumberObject()
+        equal result.number, 7
+
+      it "doesn't return non-objects from constructors", ->
+        bond(math, 'NumberObject').to ->
+          @numero = 42
+          return 'I should not be returned'
+
+        result = new math.NumberObject()
+        equal result.numero, 42
 
   describe 'return', ->
     it 'replaces methods', ->
@@ -135,6 +151,12 @@ describe 'bond', ->
 
       result = math.add(1, 2)
       equal result, 3
+
+    it 'explicitly returns objects from constructors', ->
+      bond(math, 'NumberObject').through()
+
+      result = new math.NumberObject(42)
+      equal result.number, 42
 
   describe 'restore', ->
     it 'restores the original property', ->
@@ -222,4 +244,3 @@ describe 'bond', ->
       result = new math.ComplexNumber(3, 4)
 
       equal result, number
-
