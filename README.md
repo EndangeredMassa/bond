@@ -1,10 +1,10 @@
-# bond
+# bond ![build status](https://travis-ci.org/EndangeredMassa/bond.png)  [![David](https://david-dm.org/EndangeredMassa/bond.png)](https://david-dm.org/EndangeredMassa/bond)
 
 _the simple stub/spy javascript library_
 
-[![David](https://david-dm.org/EndangeredMassa/bond.png)](https://david-dm.org/EndangeredMassa/bond)
 
-![build status](https://travis-ci.org/EndangeredMassa/bond.png)
+
+
 
 bond only provides stubbing and spy functionality.
 For test running and assertions,
