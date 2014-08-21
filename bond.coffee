@@ -72,8 +72,11 @@ nextTick = do ->
 
 
 allStubs = []
-do registerCleanupHook = ->
-  after = afterEach ? testDone ? this.cleanup ? ->
+registered = false
+registerCleanupHook = ->
+  return if registered
+
+  after = afterEach ? testDone ? QUnit?.testDone ? bond.cleanup ? ->
     throw new Error('bond.cleanup must be specified if your test runner does not use afterEach or testDone')
 
   after ->
@@ -81,7 +84,10 @@ do registerCleanupHook = ->
       stubRestore()
     allStubs = []
 
+  registered = true
+
 bond = (obj, property) ->
+  registerCleanupHook()
   return createAnonymousSpy() if arguments.length == 0
 
   previous = obj[property]
