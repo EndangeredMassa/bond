@@ -71,6 +71,44 @@ nextTick = do ->
     setTimeout(fn, 0)
 
 
+
+
+
+_registry = []
+_find = (obj) ->
+  for store in _registry
+    if store.obj == obj
+      return store
+
+  store =
+    obj: obj
+    props: {}
+  _registry.push(store)
+  store
+
+registry =
+  set: (obj, prop, value, newValue) ->
+    store = _find(obj)
+    # ignore if it looks like we're
+    # bonding multiple times
+    if !store.props[prop]?
+      store.props[prop] = value
+
+  get: (obj, prop) ->
+    _find(obj).props[prop]
+
+  restore: (obj, prop) ->
+    obj[prop] = _find(obj).props[prop]
+
+  restoreAll: ->
+    for store in _registry
+      for prop, value of store.props
+        store.obj[prop] = value
+
+    _registry = []
+
+
+
 allStubs = []
 registered = false
 registerCleanupHook = ->
@@ -80,9 +118,7 @@ registerCleanupHook = ->
     throw new Error('bond.cleanup must be specified if your test runner does not use afterEach or testDone')
 
   after ->
-    for stubRestore in allStubs
-      stubRestore()
-    allStubs = []
+    registry.restoreAll()
 
   registered = true
 
@@ -93,9 +129,10 @@ bond = (obj, property) ->
   previous = obj[property]
 
   registerRestore = ->
-    allStubs.push restore
+    registry.set obj, property, previous
+
   restore = ->
-    obj[property] = previous
+    registry.restore(obj, property)
 
   to = (newValue) ->
     registerRestore()
@@ -121,6 +158,7 @@ bond = (obj, property) ->
         callback(returnValues...)
 
   through = ->
+    registerRestore()
     obj[property] = createThroughSpy(previous, this)
     obj[property]
 

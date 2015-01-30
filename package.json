@@ -11,7 +11,7 @@
   "author": "Sean Massa <endangeredmassa@gmail.com>",
   "scripts": {
     "compile": "./node_modules/.bin/coffee --js <bond.coffee >lib/bond.js",
-    "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script-redux/register --reporter spec --colors test.coffee"
+    "test": "npm run compile && ./node_modules/.bin/mocha --compilers coffee:coffee-script-redux/register --reporter spec --colors test.coffee"
   },
   "devDependencies": {
     "mocha": "~1.6.0",
