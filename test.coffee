@@ -5,6 +5,8 @@ describe 'bond', ->
   math =
     PI: Math.PI
 
+    zero: 0
+
     abs: Math.abs
 
     add: (a, b) ->
@@ -42,6 +44,20 @@ describe 'bond', ->
       expect api.restore
 
   describe 'to', ->
+    describe 'can replace earlier bound values', ->
+      # these tests must be run in this specific order;
+      # do not bond math.zero in any other test
+      # because a failure here will cause test suite pollution
+      it 'setup', ->
+        bond(math, 'zero').to 3.14
+        bond(math, 'zero').to 12
+
+        equal math.zero, 12
+
+      it 'test', ->
+        # test that the old replacements have been cleared away
+        equal math.zero, 0
+
     describe 'non function values', ->
       it 'replaces values', ->
         bond(math, 'PI').to 3.14
