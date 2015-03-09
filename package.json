@@ -14,6 +14,7 @@
     "test": "npm run compile && ./node_modules/.bin/mocha --compilers coffee:coffee-script-redux/register --reporter spec --colors test.coffee"
   },
   "devDependencies": {
+    "assertive": "^1.4.1",
     "mocha": "~1.6.0",
     "coffee-script-redux": "~2.0.0"
   }
