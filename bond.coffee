@@ -1,3 +1,5 @@
+{ equal, deepEqual } = window?.assertive or require 'assertive'
+
 isFunction = (obj) ->
   typeof obj == 'function'
 
@@ -169,6 +171,25 @@ bond = (obj, property) ->
     'through': through
     'restore': restore
   }
+
+bond.bond = bond # to allow {bond, calledOnceWithArgs} = require 'bondjs'
+
+# strong call assertions, with assertive-style clear output:
+#   calledOnceWithArgs 'done', done, null, view
+# ...testing both the arg signature and that it's called only once
+# without forcing tests to know about bond's implementation details
+bond.calledOnceWithArgs = (name, bondFn, args...) ->
+  equal "calls to #{name}", 1, bondFn.called
+  deepEqual "#{name} args", args, bondFn.calledArgs[0]
+
+bond.calledNTimesWithArgs = (n, name, bondFn, argLists...) ->
+  if typeof n is 'number'
+    equal "calls to #{name}", n, bondFn.called
+  else if n?
+    [name, bondFn, argLists...] = arguments
+  for args, n in argLists
+    if args?
+      deepEqual "#{name} args, call number #{n+1}", args, bondFn.calledArgs[n]
 
 window.bond = bond if window?
 module.exports = bond if module?.exports
