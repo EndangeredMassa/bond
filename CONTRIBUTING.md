@@ -3,6 +3,16 @@
 Please follow this guide when
 creating issues or pull requests.
 
+
+## Code of Conduct
+
+The [Code of Conduct](CODE_OF_CONDUCT.md)
+will be enforced in all project spaces.
+Please read it
+so that you know what kind of behavior
+is expected here.
+
+
 ## Reporting a Bug
 
 Before reporting a bug,
@@ -19,6 +29,7 @@ that includes a failing test.
 If you are contributing a bug fix,
 make sure it has a passing test
 in your pull request.
+
 
 ## Code Style
 

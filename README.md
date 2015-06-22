@@ -2,17 +2,15 @@
 
 _the simple stub/spy javascript library_
 
-
-
-
-
 bond only provides stubbing and spy functionality.
 For test running and assertions,
 you will need to use other libraries.
 
-Keep up to date with changes
-by checking the
-[releases](https://github.com/endangeredmassa/bond/releases).
+This project is a safe and inclusive place
+for contributors of all kinds.
+See the [Code of Conduct](CODE_OF_CONDUCT.md)
+for details.
+
 
 ## bond api
 
