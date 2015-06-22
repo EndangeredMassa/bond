@@ -13,6 +13,9 @@
     "compile": "./node_modules/.bin/coffee --js <bond.coffee >lib/bond.js",
     "test": "npm run compile && ./node_modules/.bin/mocha --compilers coffee:coffee-script-redux/register --reporter spec --colors test.coffee"
   },
+  "dependencies": {
+    "assertive": "^1.4.1"
+  },
   "devDependencies": {
     "mocha": "~1.6.0",
     "coffee-script-redux": "~2.0.0"

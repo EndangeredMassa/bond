@@ -1,4 +1,4 @@
-{ok:expect, equal} = require 'assert'
+{truthy, falsey, equal, deepEqual, hasType} = require 'assertive'
 bond = require './lib/bond'
 
 describe 'bond', ->
@@ -26,22 +26,22 @@ describe 'bond', ->
     describe 'when called with 0 args', ->
       it 'returns a simple spy', ->
         spy = bond()
-        expect !spy.called
+        falsey spy.called
 
         spy()
-        expect spy.called
+        equal 1, spy.called
 
       it 'returns a spy that can have a return value', ->
         spy = bond().return(3)
         result = spy()
-        equal result, 3
+        equal 3, result
 
     it 'returns the bond api when called with 2 args', ->
       api = bond(math, 'add')
-      expect api.to
-      expect api.return
-      expect api.through
-      expect api.restore
+      hasType Function, api.to
+      hasType Function, api.return
+      hasType Function, api.through
+      hasType Function, api.restore
 
   describe 'to', ->
     describe 'can replace earlier bound values', ->
@@ -62,10 +62,10 @@ describe 'bond', ->
       it 'replaces values', ->
         bond(math, 'PI').to 3.14
 
-        equal math.PI, 3.14
+        equal 3.14, math.PI
 
       it 'returns to original value', ->
-        equal math.PI, 3.141592653589793
+        equal 3.141592653589793, math.PI
 
     describe 'function values', ->
       it 'creates a through spy', ->
@@ -73,19 +73,17 @@ describe 'bond', ->
 
         result = math.subtract(5, 10)
 
-        equal result, 5
-        equal math.subtract.called, 1
-        expect math.subtract.calledWith(5, 10)
+        equal 5, result
+        equal 1, math.subtract.called
+        equal true, math.subtract.calledWith(5, 10)
 
       it 'returns the original values', ->
-        result = math.subtract(5, 10)
-        equal result, -5
+        equal -5, math.subtract(5, 10)
 
       it 'explicitly returns objects from constructors', ->
         bond(math, 'NumberObject').to -> {number: 7}
 
-        result = new math.NumberObject()
-        equal result.number, 7
+        deepEqual {number: 7}, new math.NumberObject()
 
       it "doesn't return non-objects from constructors", ->
         bond(math, 'NumberObject').to ->
@@ -93,18 +91,18 @@ describe 'bond', ->
           return 'I should not be returned'
 
         result = new math.NumberObject()
-        equal result.numero, 42
+        equal 42, result.numero
 
   describe 'return', ->
     it 'replaces methods', ->
       bond(math, 'add').return(888)
 
       result = math.add()
-      equal result, 888
+      equal 888, result
 
     it 'returns to original value', ->
       result = math.add(1, 2)
-      equal result, 3
+      equal 3, result
 
   describe 'asyncReturn', ->
     module =
@@ -120,9 +118,9 @@ describe 'bond', ->
       stubValue2 = 2
       bond(module, 'useNodeCallback').asyncReturn(null, stubValue1, stubValue2)
       module.useNodeCallback ignoredValue1, ignoredValue2, (error, value1, value2) ->
-        expect !error
-        equal value1, stubValue1
-        equal value2, stubValue2
+        falsey error
+        equal stubValue1, value1
+        equal stubValue2, value2
         done()
 
     it 'calls the callback with an error', (done) ->
@@ -130,7 +128,7 @@ describe 'bond', ->
       stubError = 1
       bond(module, 'useNodeCallback').asyncReturn(stubError)
       module.useNodeCallback ignoredValue, (error) ->
-        equal error, stubError
+        equal stubError, error
         done()
 
     it 'throws an error if the last argument is not a function', ->
@@ -144,7 +142,7 @@ describe 'bond', ->
       catch err
         error = err
 
-      expect error
+      truthy error
 
     it 'calls the callback on the next tick', (done) ->
       ignoredValue = 5
@@ -159,74 +157,69 @@ describe 'bond', ->
       module.useNodeCallback ignoredValue, callbackSpy
 
       # this will fail if the callback is called immediately
-      expect !callbackSpy.called
+      falsey callbackSpy.called
 
   describe 'through', ->
     it 'calls original method', ->
       bond(math, 'add').through()
 
-      result = math.add(1, 2)
-      equal result, 3
+      equal 3, math.add(1, 2)
 
     it 'explicitly returns objects from constructors', ->
       bond(math, 'NumberObject').through()
 
       result = new math.NumberObject(42)
-      equal result.number, 42
+      equal 42, result.number
 
   describe 'restore', ->
     it 'restores the original property', ->
       original = math.add
       bond(math,'add').through()
-      expect original != math.add
+      truthy original != math.add
       math.add.restore()
-      expect original == math.add
+      truthy original == math.add
 
   describe 'spies with `through` and `return`', ->
     it 'returns the bond api mixed into the returned spy', ->
       for method in ['through', 'return']
         bond(math, 'add')[method]()
-        expect math.add.to
-        expect math.add.return
-        expect math.add.through
-        expect math.add.restore
+        truthy math.add.to
+        truthy math.add.return
+        truthy math.add.through
+        truthy math.add.restore
 
     it 'allows the spy to be replaced with new spies via the mixed-in api', ->
       bond(math,'add').return(123)
-      result = math.add(1, 2)
-      equal result, 123
+      equal 123, result = math.add(1, 2)
 
       math.add.return(321)
-      result = math.add(1, 2)
-      equal result, 321
+      equal 321, result = math.add(1, 2)
 
       math.add.through()
-      result = math.add(1, 2)
-      equal result, 3
+      equal 3, result = math.add(1, 2)
 
       math.add.return(123)
-      result = math.add(1, 2)
-      equal result, 123
+      equal 123, result = math.add(1, 2)
 
     it 'records call count via called', ->
       bond(math, 'add').return(777)
-      equal math.add.called, 0
+      equal 0, math.add.called
       math.add(1, 2)
-      equal math.add.called, 1
+      equal 1, math.add.called
       math.add(1, 2)
-      equal math.add.called, 2
+      equal 2, math.add.called
 
     it 'records called via called', ->
       bond(math, 'add').through()
-      expect !math.add.called
+      falsey math.add.called
       math.add(1, 2)
-      expect math.add.called
+      truthy math.add.called
 
     it 'responds to calledWith(args...)', ->
       bond(math, 'add').return(666)
-      expect !math.add.calledWith(11, 22)
+      falsey math.add.calledWith(11, 22)
       math.add(11, 22)
-      expect math.add.calledWith(11, 22)
+      truthy math.add.calledWith(11, 22)
 
     it 'exposes argsForCall', ->
       bond(math, 'add').return(555)
@@ -234,29 +227,27 @@ describe 'bond', ->
       math.add(111, 222)
       math.add(333, 444)
 
-      equal math.add.calledArgs[0][0], 111
-      equal math.add.calledArgs[0][1], 222
-      equal math.add.calledArgs[1][0], 333
-      equal math.add.calledArgs[1][1], 444
+      deepEqual [
+        [111, 222]
+        [333, 444]
+      ], math.add.calledArgs
 
     it 'returns the spy', ->
       spy = bond(math, 'add').through()
       math.add(1, 2)
-      expect spy.called
+      equal 1, spy.called
 
     it 'through is constructor safe', ->
       bond(math, 'ComplexNumber').through()
       result = new math.ComplexNumber(3, 4)
 
-      equal result.real, 3
-      equal result.imaginary, 4
-      expect math.ComplexNumber.called
+      equal 3, result.real
+      equal 4, result.imaginary
+      equal 1, math.ComplexNumber.called
 
     it 'return is constructor safe', ->
       number =
         real: 1
         imaginary: 2
       bond(math, 'ComplexNumber').return(number)
-      result = new math.ComplexNumber(3, 4)
-
-      equal result, number
+      equal number, new math.ComplexNumber(3, 4)
