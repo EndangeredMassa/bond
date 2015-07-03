@@ -47,9 +47,9 @@ enhanceSpy = (spy, original, bondApi) ->
   spy.called = 0
   spy.calledArgs = []
   spy.calledWith = (args...) ->
-    return false if !spy.called
-    lastArgs = spy.calledArgs[spy.called-1]
-    arrayEqual(args, lastArgs)
+    for calledArgs in spy.calledArgs
+      return true if arrayEqual(args, calledArgs)
+    false
 
   spy[k] = v for k, v of bondApi if bondApi
 
