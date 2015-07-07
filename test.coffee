@@ -222,11 +222,18 @@ describe 'bond', ->
       math.add(1, 2)
       expect math.add.called
 
-    it 'responds to calledWith(args...)', ->
-      bond(math, 'add').return(666)
-      expect !math.add.calledWith(11, 22)
-      math.add(11, 22)
-      expect math.add.calledWith(11, 22)
+    describe 'calledWith', ->
+      it 'returns whether the method has been called', ->
+        bond(math, 'add').return(666)
+        expect !math.add.calledWith(11, 22)
+        math.add(11, 22)
+        expect math.add.calledWith(11, 22)
+
+      it 'returns true when the arguments are not from the most recent call', ->
+        bond(math, 'add').return(666)
+        math.add(11, 22)
+        math.add(33, 44)
+        expect math.add.calledWith(11, 22)
 
     it 'exposes argsForCall', ->
       bond(math, 'add').return(555)
