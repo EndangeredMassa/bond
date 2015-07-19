@@ -16,5 +16,8 @@
   "devDependencies": {
     "mocha": "~1.6.0",
     "coffee-script-redux": "~2.0.0"
+  },
+  "dependencies": {
+    "underscore": "^1.8.3"
   }
 }

@@ -1,3 +1,5 @@
+_ = require 'underscore'
+
 isFunction = (obj) ->
   typeof obj == 'function'
 
@@ -48,20 +50,12 @@ enhanceSpy = (spy, original, bondApi) ->
   spy.calledArgs = []
   spy.calledWith = (args...) ->
     for calledArgs in spy.calledArgs
-      return true if arrayEqual(args, calledArgs)
+      return true if _.isEqual(args, calledArgs)
     false
 
   spy[k] = v for k, v of bondApi if bondApi
 
   spy
-
-arrayEqual = (A, B) ->
-  for a, i in A
-    b = B[i]
-    return false if a != b
-
-  true
-
 
 nextTick = do ->
   return process.nextTick if isFunction(process?.nextTick)

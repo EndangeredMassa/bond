@@ -235,6 +235,16 @@ describe 'bond', ->
         math.add(33, 44)
         expect math.add.calledWith(11, 22)
 
+      it 'matches objects with deep equality', ->
+        bond(math, 'add').return(666)
+        math.add(a: { b: 'c' })
+        expect math.add.calledWith(a: { b: 'c' })
+
+      it 'matches arrays with deep equality', ->
+        bond(math, 'add').return(666)
+        math.add([1, 2, 3])
+        expect math.add.calledWith([1, 2, 3])
+
     it 'exposes argsForCall', ->
       bond(math, 'add').return(555)
 
