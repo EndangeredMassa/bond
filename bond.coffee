@@ -164,5 +164,4 @@ bond = (obj, property) ->
     'restore': restore
   }
 
-window.bond = bond if window?
 module.exports = bond if module?.exports
