@@ -164,4 +164,4 @@ bond = (obj, property) ->
     'restore': restore
   }
 
-module.exports = bond if module?.exports
+module.exports = bond
