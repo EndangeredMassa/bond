@@ -42,8 +42,6 @@ for details.
 
 `npm install bondjs` -> `bond = require 'bondjs'`
 
-`<script src="bond.js">` -> `window.bond(...)`
-
 **with mocha, qunit, jasmine**: These frameworks should work with bond as is. Bond looks for a global function named either `afterEach` or `testDone` to implement its spy/stub restore functionality. If those exist, as they should when using these frameworks, it should work fine.
 
 **with some other test runner**: You may need to implement your own `cleanup` method for bond to work properly. This might look like the following.
