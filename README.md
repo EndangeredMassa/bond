@@ -1,4 +1,4 @@
-# bond ![build status](https://travis-ci.org/EndangeredMassa/bond.png)  [![David](https://david-dm.org/EndangeredMassa/bond.png)](https://david-dm.org/EndangeredMassa/bond)
+# bond
 
 _the simple stub/spy javascript library_
 
